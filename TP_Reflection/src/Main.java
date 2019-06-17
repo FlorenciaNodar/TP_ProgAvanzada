@@ -26,12 +26,30 @@ public class Main {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	  	
-        Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 1);
-        System.out.print(persona);       
-
-        persona.setApellido("Nodar");
+		/////////////////////////*Crear una persona*///////////////////////////
+		
+		/*Persona persona = new Persona("Marianela", "Suarez", 32, "Belgrano 22");
+		persona.setId((Integer)Consultas.guardar(persona));       */         
+        
+		/////////////////////////*Eliminar una persona*//////////////////////////
+		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 1);     
+        Consultas.eliminar(persona);*/
+        
+		
+		/////////////////////////*Modificar una persona*/////////////////////////
+		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 2);     
+        persona.setApellido("Rodríguez Peña");
         persona.setEdad(25);
-        persona.setEsSocio(Boolean.TRUE);
+        Consultas.modificar(persona);*/
+		
+		
+		/////////////////////////*Modificar o crear una persona*/////////////////////////
+		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 7);	        
+		persona.setApellido("sddsdsdsds");        
+		persona.setNombre("fdsddd");
+		persona.setEdad(22);
+		persona.setDomicilio("Belgrano ddd");       
+		persona.setId((Integer)Consultas.guardarModificar(persona));*/
+        
     }
 }

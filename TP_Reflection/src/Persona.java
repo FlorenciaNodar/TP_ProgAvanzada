@@ -16,18 +16,19 @@ public class Persona {
     
     @Columna(nombre = "edad")
     private Integer edad;
-    
-    @Columna(nombre = "socio")
-    private Boolean esSocio;
 
+    @Columna(nombre = "domicilio")
+    private String domicilio;
+    
+    
     public Persona() {
     }
 
-    public Persona(String nombre, String apellido, Integer edad, Boolean esSocio) {
+    public Persona(String nombre, String apellido, Integer edad,String Domicilio) {
         this.nombre = nombre;
         this.apellido = apellido;
+        this.domicilio = domicilio;
         this.edad = edad;
-        this.esSocio = esSocio;
     }
     
     public Integer getId() {
@@ -46,6 +47,13 @@ public class Persona {
         this.nombre = nombre;
     }
 
+    public String getDomicilio() {
+        return domicilio;
+    }
+
+    public void setDomicilio(String domicilio) {
+        this.domicilio = domicilio;
+    }
     public String getApellido() {
         return apellido;
     }
@@ -62,16 +70,9 @@ public class Persona {
         this.edad = edad;
     }
 
-    public Boolean getEsSocio() {
-        return esSocio;
-    }
-
-    public void setEsSocio(Boolean esSocio) {
-        this.esSocio = esSocio;
-    }
 
     @Override
     public String toString() {
-        return "Id: " + this.id + " Nombre: " + this.nombre + " Apellido: " + this.apellido + " Edad: " + this.edad + " EsSocio: " + this.esSocio;
+        return "Id: " + this.id + " Nombre: " + this.nombre + " Apellido: " + this.apellido + " Edad: " + this.edad+ " Domicilio: " + this.domicilio;
     }
 }
