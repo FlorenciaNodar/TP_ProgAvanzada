@@ -62,7 +62,7 @@ public class Consultas {
     		tabla = (Tabla) clazz.getAnnotation(Tabla.class);
     			
     		if(tabla != null)
-    	            try {
+	            try {
     					
     			StringBuilder sbInsert = new StringBuilder();
     			sbInsert.append("INSERT INTO " + tabla.nombre() + "(");
@@ -89,12 +89,13 @@ public class Consultas {
     						
     	                try {
     	                    PreparedStatement ps = conn.prepareStatement(sbInsert.toString());
+    	                    //ps.setObject(arg0, arg1) foreach, refactorization
     	                    ps.execute();
     	                } catch (SQLException e) {
     	                    e.printStackTrace();
     	                }
     	                
-    	                PreparedStatement ps2 = conn.prepareStatement("SELECT TOP 1 " + fieldId.getName() + " FROM " + tabla.nombre() + " ORDER BY " + fieldId.getName() + " DESC");
+    	                PreparedStatement ps2 = conn.prepareStatement("SELECT MAX (" + fieldId.getName() + ") FROM " + tabla.nombre() + " ORDER BY " + fieldId.getName() + " DESC");
     	                ResultSet rs = ps2.executeQuery();
     	                
     	                while(rs.next()){
@@ -152,7 +153,7 @@ public class Consultas {
             }
             
             try {
-                UBean.ejecutarSet(o, fieldId.getName(), id);
+                UBean.ejecutarSet(o, fieldId.getName(), id); //está de más.
             } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -258,69 +259,5 @@ public class Consultas {
 	        
 	    }
     
- public static List<Object> obtenerTodos(Class c){
-        
-        List<Object> objetos = new ArrayList<>();
-    
-        tabla = (Tabla) c.getAnnotation(Tabla.class);
-        
-        Object o = null;
-        
-        Constructor[] constructors = c.getConstructors();
-        
-        for(Constructor constr : constructors){
-            if(constr.getParameterCount() == 0){
-                try {
-                    o = constr.newInstance();
-                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        
-        fields = UBean.obtenerAtributos(o);
-        
-        cargarColumnasYId(fields);
-        
-        try {
-            Connection conn = UConexion.getInstance();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tabla.nombre());
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                for(Constructor constr : constructors){
-                    if(constr.getParameterCount() == 0){
-                        try {
-                            o = constr.newInstance();
-                        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-                for(Field f : fields){
-                    if(f.getAnnotation(Columna.class) != null) {
-                        try {
-                            UBean.ejecutarSet(o, f.getName(), rs.getObject(f.getAnnotation(Columna.class).nombre()));
-                        } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } else if(f.getAnnotation(Id.class) != null) {
-                        try {
-                            UBean.ejecutarSet(o, f.getName(), rs.getObject(f.getName()));
-                        } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-                objetos.add(o);
-            }
-            conn.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        vaciarColumnasYId();
-        
-        return objetos;
-        
-    }
+ 
 }

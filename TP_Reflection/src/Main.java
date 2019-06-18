@@ -30,12 +30,12 @@ public class Main {
 		
 		
 		/////////////////////////*Crear una persona*///////////////////////////
-		/*Persona persona = new Persona("Marianela", "Suarez", 32, "Belgrano 22");
+		/*Persona persona = new Persona("Matias", "Ramos", 32, "aksdasdasdas");
 		Consultas.guardar(persona);*/
 		      
         
 		/////////////////////////*Eliminar una persona*//////////////////////////
-		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 1);     
+		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 9);     
         Consultas.eliminar(persona);*/
         
 		
@@ -54,10 +54,6 @@ public class Main {
 		persona.setDomicilio("Belgrano ddd");       
 		persona.setId((Integer)Consultas.guardarModificar(persona));*/
         
-		
-		////////////////////////////*TraerTodosLosRegistros*//////////////////////////////////
-		/*List<Object> objetos = Consultas.obtenerTodos(Persona.class);
-        
-        System.out.println(objetos);*/
+	
     }
 }
