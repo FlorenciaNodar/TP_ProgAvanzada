@@ -27,10 +27,12 @@ public class Main {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		/////////////////////////*Crear una persona*///////////////////////////
 		
+		
+		/////////////////////////*Crear una persona*///////////////////////////
 		/*Persona persona = new Persona("Marianela", "Suarez", 32, "Belgrano 22");
-		persona.setId((Integer)Consultas.guardar(persona));       */         
+		Consultas.guardar(persona);*/
+		      
         
 		/////////////////////////*Eliminar una persona*//////////////////////////
 		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 1);     
@@ -45,7 +47,7 @@ public class Main {
 		
 		
 		/////////////////////////*Modificar o crear una persona*/////////////////////////
-		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 7);	        
+		/*Persona persona = (Persona) Consultas.obtenerPorId(Persona.class, 10);	        
 		persona.setApellido("sddsdsdsds");        
 		persona.setNombre("fdsddd");
 		persona.setEdad(22);
@@ -54,8 +56,8 @@ public class Main {
         
 		
 		////////////////////////////*TraerTodosLosRegistros*//////////////////////////////////
-		List<Object> objetos = Consultas.obtenerTodos(Persona.class);
+		/*List<Object> objetos = Consultas.obtenerTodos(Persona.class);
         
-        System.out.println(objetos);
+        System.out.println(objetos);*/
     }
 }

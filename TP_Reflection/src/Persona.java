@@ -24,7 +24,7 @@ public class Persona {
     public Persona() {
     }
 
-    public Persona(String nombre, String apellido, Integer edad,String Domicilio) {
+    public Persona(String nombre, String apellido, Integer edad,String domicilio) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.domicilio = domicilio;

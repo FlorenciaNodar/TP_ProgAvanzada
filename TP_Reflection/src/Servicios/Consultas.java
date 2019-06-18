@@ -49,68 +49,65 @@ public class Consultas {
     
     public static Object guardar(Object o){
 	        
-        Object id = null;
-	        
-		Connection conn = UConexion.getInstance();
-			
-		Class clazz = o.getClass();
-			
-		fields = UBean.obtenerAtributos(o);
-
-        cargarColumnasYId(fields);
-			
-		tabla = (Tabla) clazz.getAnnotation(Tabla.class);
-
-		if(tabla != null)
-	            try {
-					
-			StringBuilder sbInsert = new StringBuilder();
-			sbInsert.append("INSERT INTO " + tabla.nombre() + "(");
-			for(Columna c : columnas){
-	                    sbInsert.append(c.nombre() + ", ");
-
-			}
-			sbInsert.replace(sbInsert.length() - 2, sbInsert.length(), ") VALUES (");
-			for(Field f : fields){
-	                    try {
-	                        if(f.getAnnotation(Columna.class) != null){
-	                            Object valor = UBean.ejecutarGet(o, f.getName());
-
-	                            if(valor.getClass().equals(String.class)){
-	                                sbInsert.append("'").append(valor.toString()).append("'").append(", ");
-	                            } else {
-	                                sbInsert.append(valor).append(", ");
-	                            }
-	                            
-	                        }
-	                    } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException
-	                                | IllegalArgumentException | InvocationTargetException e) {
-						e.printStackTrace();
-	                            }
-			}
-			sbInsert.replace(sbInsert.length() - 2, sbInsert.length(), ")");
-						
-	                try {
-	                    PreparedStatement ps = conn.prepareStatement(sbInsert.toString());
-
-	                    ps.execute();
-	                } catch (SQLException e) {
-	                    e.printStackTrace();
-	                }
-	                
-	                PreparedStatement ps2 = conn.prepareStatement("SELECT TOP 1" + fieldId.getName() + " FROM " + tabla.nombre() + " ORDER BY " + fieldId.getName() + " DESC");
-	                ResultSet rs = ps2.executeQuery();
-	                
-	                while(rs.next()){
-	                    id = rs.getObject(1);
-	                }
-						
-			conn.close();
-	            } catch (Exception e) {
-			e.printStackTrace();
-	            };
-	            vaciarColumnasYId();
-	            return id;
+    	   Object id = null;
+           
+    		Connection conn = UConexion.getInstance();
+    			
+    		Class clazz = o.getClass();
+    			
+    		fields = UBean.obtenerAtributos(o);
+    	        
+	        cargarColumnasYId(fields);
+    			
+    		tabla = (Tabla) clazz.getAnnotation(Tabla.class);
+    			
+    		if(tabla != null)
+    	            try {
+    					
+    			StringBuilder sbInsert = new StringBuilder();
+    			sbInsert.append("INSERT INTO " + tabla.nombre() + "(");
+    			for(Columna c : columnas){
+    	                    sbInsert.append(c.nombre() + ", ");
+    			}
+    			sbInsert.replace(sbInsert.length() - 2, sbInsert.length(), ") VALUES (");
+    			for(Field f : fields){
+    	                    try {
+    	                        if(f.getAnnotation(Columna.class) != null){
+    	                            Object valor = UBean.ejecutarGet(o, f.getName());
+    	                            if(valor.getClass().equals(String.class)){
+    	                                sbInsert.append("'").append(valor.toString()).append("'").append(", ");
+    	                            } else {
+    	                                sbInsert.append(valor).append(", ");
+    	                            }
+    	                        }
+    	                    } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException
+    	                                | IllegalArgumentException | InvocationTargetException e) {
+    						e.printStackTrace();
+    	                            }
+    			}
+    			sbInsert.replace(sbInsert.length() - 2, sbInsert.length(), ")");
+    						
+    	                try {
+    	                    PreparedStatement ps = conn.prepareStatement(sbInsert.toString());
+    	                    ps.execute();
+    	                } catch (SQLException e) {
+    	                    e.printStackTrace();
+    	                }
+    	                
+    	                PreparedStatement ps2 = conn.prepareStatement("SELECT TOP 1 " + fieldId.getName() + " FROM " + tabla.nombre() + " ORDER BY " + fieldId.getName() + " DESC");
+    	                ResultSet rs = ps2.executeQuery();
+    	                
+    	                while(rs.next()){
+    	                    id = rs.getObject(1);
+    	                }
+    						
+    			conn.close();
+    	            } catch (Exception e) {
+    			e.printStackTrace();
+    	            };
+    	            vaciarColumnasYId();
+    	            return id;
+    	    
 	    }
 	    
     public static Object obtenerPorId(Class c, Object id){
@@ -247,6 +244,7 @@ public class Consultas {
 	            if (rs.next()) {
 	                modificar(o);
 	            } else {
+	    	        vaciarColumnasYId();
 	                id = guardar(o);
 	            }
 	            conn.close();
