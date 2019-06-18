@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import Servicios.Consultas;
@@ -51,5 +52,10 @@ public class Main {
 		persona.setDomicilio("Belgrano ddd");       
 		persona.setId((Integer)Consultas.guardarModificar(persona));*/
         
+		
+		////////////////////////////*TraerTodosLosRegistros*//////////////////////////////////
+		List<Object> objetos = Consultas.obtenerTodos(Persona.class);
+        
+        System.out.println(objetos);
     }
 }

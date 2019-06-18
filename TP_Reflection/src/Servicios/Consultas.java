@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -258,4 +259,70 @@ public class Consultas {
 	        return id;
 	        
 	    }
+    
+ public static List<Object> obtenerTodos(Class c){
+        
+        List<Object> objetos = new ArrayList<>();
+    
+        tabla = (Tabla) c.getAnnotation(Tabla.class);
+        
+        Object o = null;
+        
+        Constructor[] constructors = c.getConstructors();
+        
+        for(Constructor constr : constructors){
+            if(constr.getParameterCount() == 0){
+                try {
+                    o = constr.newInstance();
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        
+        fields = UBean.obtenerAtributos(o);
+        
+        cargarColumnasYId(fields);
+        
+        try {
+            Connection conn = UConexion.getInstance();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tabla.nombre());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                for(Constructor constr : constructors){
+                    if(constr.getParameterCount() == 0){
+                        try {
+                            o = constr.newInstance();
+                        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                for(Field f : fields){
+                    if(f.getAnnotation(Columna.class) != null) {
+                        try {
+                            UBean.ejecutarSet(o, f.getName(), rs.getObject(f.getAnnotation(Columna.class).nombre()));
+                        } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if(f.getAnnotation(Id.class) != null) {
+                        try {
+                            UBean.ejecutarSet(o, f.getName(), rs.getObject(f.getName()));
+                        } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                objetos.add(o);
+            }
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Consultas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        vaciarColumnasYId();
+        
+        return objetos;
+        
+    }
 }
